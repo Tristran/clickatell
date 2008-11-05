@@ -65,6 +65,14 @@ module Clickatell
     # Returns a new message ID if successful.
     def send_message(recipient, message_text, opts={})
       valid_options = opts.only(:from, :mo)
+      #Messages over 160 characters in length require concatenation.
+      if message_text.size > 160
+        #Concatenated messages have a max size of 153 chars each.
+        concat = (message_text.size / 153.to_f).ceil.to_s
+      else
+        concat = "1"
+      end
+      valid_options.merge!(:concat => concat)
       valid_options.merge!(:req_feat => '48') if valid_options[:from]
       valid_options.merge!(:mo => '1') if opts[:set_mobile_originated]
       response = execute_command('sendmsg', 'http',
