@@ -69,10 +69,8 @@ module Clickatell
       if message_text.size > 160
         #Concatenated messages have a max size of 153 chars each.
         concat = (message_text.size / 153.to_f).ceil.to_s
-      else
-        concat = "1"
+        valid_options.merge!(:concat => concat)
       end
-      valid_options.merge!(:concat => concat)
       valid_options.merge!(:req_feat => '48') if valid_options[:from]
       valid_options.merge!(:mo => '1') if opts[:set_mobile_originated]
       response = execute_command('sendmsg', 'http',
